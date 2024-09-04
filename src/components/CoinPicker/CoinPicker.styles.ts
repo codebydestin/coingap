@@ -7,13 +7,27 @@ const useCoinPickerStyles = () => {
 
     const stylesheet = StyleSheet.create({
         wrapper: {
-            backgroundColor: 'white',
-            padding: 16,
-            marginHorizontal: 8,
-            width: width * 0.5,
-            height: width * 0.45,
-            borderRadius: 16,
-          },
+          flexDirection: 'row',
+          justifyContent: 'center',
+          backgroundColor: 'white',
+          width: width,
+          marginBottom: 22,
+        },
+        segment: {
+          paddingHorizontal: 20,
+          paddingVertical: 12,
+        },
+        active: {
+          borderBottomColor: '#6f34ff',
+          borderBottomWidth: 4,
+        },
+        activeText: {
+          fontWeight: '700',
+          color: '#171725',
+        },
+        text: {
+          color: '#7c8283',
+        },
     });
 
     return useMemo(

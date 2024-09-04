@@ -14,9 +14,9 @@ import Settings from './src/screens/Settings';
 import TopList from './src/screens/TopList';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import {
-  faChartPie,
   faChartSimple,
   faGear,
+  faPieChart,
 } from '@fortawesome/free-solid-svg-icons';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import CoinDetail from './src/screens/CoinDetail';
@@ -65,24 +65,38 @@ function App(): React.JSX.Element {
       <Tab.Navigator
         screenOptions={({ route }) => ({
           tabBarIcon: ({ focused, color, size }) => {
-            let iconName;
+            let icon;
 
             if (route.name === 'TopListStack') {
-              return <FontAwesomeIcon icon={faChartSimple} />;
+              icon = faChartSimple;
             } else if (route.name === 'SettingsStack') {
-              return <FontAwesomeIcon icon={faGear} />;
+              icon = faGear;
+            } else {
+              icon = faPieChart;
             }
 
             // You can return any component that you like here!
-            return <FontAwesomeIcon icon={faChartPie} />;
+            return <FontAwesomeIcon icon={icon} color={color} />;
           },
-          tabBarActiveTintColor: 'green',
-          tabBarInactiveTintColor: 'gray',
+          tabBarActiveTintColor: '#6f34ff',
+          tabBarInactiveTintColor: '#7c8283',
           headerShown: false,
         })}>
-        <Tab.Screen name="HomeStack" component={HomeStack} />
-        <Tab.Screen name="TopListStack" component={TopListStack} />
-        <Tab.Screen name="SettingsStack" component={SettingsStack} />
+        <Tab.Screen
+          name="HomeStack"
+          component={HomeStack}
+          options={{ title: 'Home' }}
+        />
+        <Tab.Screen
+          name="TopListStack"
+          component={TopListStack}
+          options={{ title: 'Top' }}
+        />
+        <Tab.Screen
+          name="SettingsStack"
+          component={SettingsStack}
+          options={{ title: 'Settings' }}
+        />
       </Tab.Navigator>
     </NavigationContainer>
   );
