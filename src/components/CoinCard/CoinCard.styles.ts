@@ -1,14 +1,16 @@
 import { useMemo } from 'react';
-import { StyleSheet, useWindowDimensions } from 'react-native';
+import { StyleSheet } from 'react-native';
 
 
 const useCoinCardStyles = () => {
-    const {width} = useWindowDimensions();
 
     const stylesheet = StyleSheet.create({
         wrapper: {
-            borderBottomColor: '#f6f8fa',
-            borderBottomWidth: 4,
+            marginHorizontal: 12,
+            marginBottom: 8,
+            borderRadius: 16,
+            paddingHorizontal: 12,
+            backgroundColor: 'white',
             flexDirection: 'row',
             paddingVertical: 16,
             flex: 1,
@@ -25,7 +27,7 @@ const useCoinCardStyles = () => {
             fontWeight: '700',
             marginBottom: 4,
             lineHeight: 20,
-            fontSize: 15,
+            fontSize: 14,
         },
         lightText: {
             color: '#7c8283',
@@ -36,7 +38,7 @@ const useCoinCardStyles = () => {
             fontWeight: '600',
             marginBottom: 4,
             lineHeight: 20,
-            fontSize: 15,
+            fontSize: 14,
         },
         icon: {
             width: 32,

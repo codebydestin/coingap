@@ -19,6 +19,7 @@ import {
   faGear,
 } from '@fortawesome/free-solid-svg-icons';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import CoinDetail from './src/screens/CoinDetail';
 
 function App(): React.JSX.Element {
   const Stack = createNativeStackNavigator();
@@ -26,8 +27,19 @@ function App(): React.JSX.Element {
 
   const HomeStack = () => {
     return (
-      <Stack.Navigator>
+      <Stack.Navigator
+        screenOptions={{
+          headerShadowVisible: false,
+          headerStyle: {
+            backgroundColor: '#6f34ff', // Set the background color of the header
+          },
+          headerTintColor: '#fff', // Set the text color of the header
+          headerTitleStyle: {
+            fontWeight: 'bold', // Optional: Set the font weight of the header title
+          },
+        }}>
         <Stack.Screen name="Home" component={Home} />
+        <Stack.Screen name="CoinDetail" component={CoinDetail} />
       </Stack.Navigator>
     );
   };

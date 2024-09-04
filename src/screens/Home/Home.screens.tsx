@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
-import React, { Pressable, Text, View } from 'react-native';
+import React, { ScrollView, Text, View } from 'react-native';
 import api from '../../api/api';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import CoinCard from '../../components/CoinCard/CoinCard.view';
+import CoinCard from '../../components/CoinCard';
+import CarouselCard from '../../components/CarouselCard';
 
 const Home = (): JSX.Element => {
   const [coins, setCoins] = useState([]);
@@ -10,12 +11,14 @@ const Home = (): JSX.Element => {
   const fetchCoins = async () => {
     const results = await api.get('/top/totalvolfull', {
       params: {
-        limit: 100,
+        limit: 40,
         tsym: 'USD',
       },
     });
-    setCoins(results.data.Data);
-    console.log(`DATA: ${JSON.stringify(results.data.Data)}`);
+    const filteredCoins = results.data.Data.filter(
+      c => c.hasOwnProperty('RAW') && c.hasOwnProperty('DISPLAY'),
+    );
+    setCoins(filteredCoins);
   };
 
   useEffect(() => {
@@ -24,26 +27,24 @@ const Home = (): JSX.Element => {
 
   return (
     <KeyboardAwareScrollView style={{ backgroundColor: '#f6f8fa' }}>
-      <View
+      <ScrollView
+        showsHorizontalScrollIndicator={false}
+        horizontal={true}
         style={{
           backgroundColor: '#6f34ff',
-          margin: 12,
-          paddingVertical: 22,
-          paddingHorizontal: 16,
-          borderRadius: 22,
+          marginBottom: 22,
+          paddingVertical: 36,
         }}>
-        <Text>Hello App</Text>
-        <Text>Hello App</Text>
+        {coins.slice(0, 8).map(c => (
+          <CarouselCard coin={c} />
+        ))}
+      </ScrollView>
+      <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
+        <Text>Price</Text>
+        <Text>Gainers</Text>
+        <Text>Losers</Text>
       </View>
-
-      <View
-        style={{
-          backgroundColor: 'white',
-          margin: 12,
-          paddingVertical: 22,
-          paddingHorizontal: 16,
-          borderRadius: 22,
-        }}>
+      <View>
         {coins.map(c => (
           <CoinCard key={c.CoinInfo?.Id} coin={c} />
         ))}
