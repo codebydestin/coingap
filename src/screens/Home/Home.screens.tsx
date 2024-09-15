@@ -1,4 +1,4 @@
-import React, { ScrollView, View } from 'react-native';
+import React, { RefreshControl, ScrollView, View } from 'react-native';
 
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import CoinCard from '../../components/CoinCard';
@@ -7,13 +7,30 @@ import CoinPicker from '../../components/CoinPicker';
 import ErrorView from '../../components/Error/Error.view';
 import Loader from '../../components/Loader';
 import useTopCoins from '../../hooks/useTopCoins';
-import { Coin } from '../../models/Coin';
+import useHomeStyles from './Home.styles';
 
 const Home = (): JSX.Element => {
-  const [fetchTopCoins, coins, onError, isLoading] = useTopCoins();
+  const [
+    fetchTopCoins,
+    coins,
+    onError,
+    isLoading,
+    sortByPrice,
+    sortByPctGain,
+    sortByPctLoss,
+  ] = useTopCoins();
+
+  const styles = useHomeStyles();
 
   return (
-    <KeyboardAwareScrollView style={{ backgroundColor: '#f6f8fa' }}>
+    <KeyboardAwareScrollView
+      style={isLoading ? styles.lightBg : styles.darkBg}
+      refreshControl={
+        <RefreshControl
+          refreshing={isLoading as boolean}
+          onRefresh={fetchTopCoins as () => void}
+        />
+      }>
       {/**SHOW ERROR MODAL */}
       {onError && <ErrorView />}
 
@@ -24,18 +41,25 @@ const Home = (): JSX.Element => {
           <ScrollView
             showsHorizontalScrollIndicator={false}
             horizontal={true}
-            style={{
-              backgroundColor: '#6f34ff',
-              paddingVertical: 36,
-            }}>
-            {coins.slice(0, 8).map(c => (
+            style={styles.carouselWrapper}>
+            {coins.map(c => (
               <CarouselCard key={c.coinInfo.coinId} coin={c} />
             ))}
           </ScrollView>
 
-          <CoinPicker />
+          <View style={styles.scrollWrapper}>
+            <CoinPicker
+              onSelect={(index: number) => {
+                if (index === 1 && sortByPctGain) {
+                  sortByPctGain();
+                } else if (index === 2 && sortByPctLoss) {
+                  sortByPctLoss();
+                } else {
+                  sortByPrice();
+                }
+              }}
+            />
 
-          <View>
             {coins.map(c => (
               <CoinCard key={c.CoinInfo?.Id} coin={c} />
             ))}

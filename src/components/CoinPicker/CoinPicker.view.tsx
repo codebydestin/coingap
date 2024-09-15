@@ -1,8 +1,12 @@
-import React, { useState } from 'react';
+import React, { FC, useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
 import useCoinPickerStyles from './CoinPicker.styles';
 
-const CoinPicker = () => {
+interface Props {
+  onSelect: (index: number) => void;
+}
+
+const CoinPicker: FC<Props> = ({ onSelect }) => {
   const [activeTab, setActiveTab] = useState(0);
   const styles = useCoinPickerStyles();
 
@@ -14,7 +18,10 @@ const CoinPicker = () => {
         <Pressable
           key={title}
           style={[styles.segment, index === activeTab && styles.active]}
-          onPress={() => setActiveTab(index)}>
+          onPress={() => {
+            setActiveTab(index);
+            onSelect(index);
+          }}>
           <Text style={activeTab === index ? styles.activeText : styles.text}>
             {title}
           </Text>

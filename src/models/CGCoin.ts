@@ -1,5 +1,5 @@
 
-export interface Coin {
+export interface CGCoin {
     coinInfo: {
         coinId: string
         fullName: string,
