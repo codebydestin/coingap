@@ -1,33 +1,100 @@
 import { useEffect, useState } from 'react';
 import api from '../api/api';
+import { TopCoinResponse } from '../models/TopCoinResponse';
+import { Coin } from '../models/Coin';
 
 export default () => {
-  const [coins, setCoins] = useState([]);
+  const [coins, setCoins] = useState<Coin[] | null>(null);
   const [onError, setOnError] = useState<boolean>(false);
+  const [errorString, setErrorString] = useState(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [status, setStatus] = useState(null);
 
   const fetchTopCoins = async () => {
-    try {
-      setIsLoading(true);
-      setOnError(false);
+    // Reset state values before fetching
+    setIsLoading(true);
+    setCoins(null);
+    setOnError(false);
+    setErrorString(null);
+    setStatus(null);
 
-      const results = await api.get('/top/totalvolfull', {
+    try {
+      // API call to get top coins
+      const { data } = await api.get<TopCoinResponse>('/top/totalvolfull', {
         params: {
           limit: 40,
           tsym: 'USD',
         },
       });
-      const filteredCoins = results.data.Data.filter(
-        c => c.hasOwnProperty('RAW') && c.hasOwnProperty('DISPLAY'),
-      );
-      setCoins(filteredCoins);
-    } catch (err) {
+
+      // Filter out coins that don't have both RAW and DISPLAY
+      const filterCoins = data.Data.filter(d => d.RAW && d.DISPLAY);
+
+      // Map filtered coins into the desired structure only if RAW and DISPLAY are not null
+      const finalCoins: Coin[] = filterCoins.map(({ CoinInfo, RAW, DISPLAY }) => ({
+        coinInfo: {
+          coinId: CoinInfo.Id,
+          fullName: CoinInfo.FullName,
+          shortName: CoinInfo.Name,
+          imageUrl: CoinInfo.ImageUrl,
+          url: CoinInfo.Url,
+        },
+        raw: {
+          fromSymbol: RAW!.USD.FROMSYMBOL,
+          toSymbol: RAW!.USD.TOSYMBOL,
+          price: RAW!.USD.PRICE,
+          openHour: RAW!.USD.OPENHOUR,
+          highHour: RAW!.USD.HIGHHOUR,
+          lowHour: RAW!.USD.LOWHOUR,
+          openDay: RAW!.USD.OPENDAY,
+          highDay: RAW!.USD.HIGHDAY,
+          lowDay: RAW!.USD.LOWDAY,
+          open24Hour: RAW!.USD.OPEN24HOUR,
+          high24Hour: RAW!.USD.HIGH24HOUR,
+          low24Hour: RAW!.USD.LOW24HOUR,
+          change24Hour: RAW!.USD.CHANGE24HOUR,
+          changePct24Hour: RAW!.USD.CHANGEPCT24HOUR,
+          changeDay: RAW!.USD.CHANGEDAY,
+          changePctDay: RAW!.USD.CHANGEPCTDAY,
+          changeHour: RAW!.USD.CHANGEHOUR,
+          changePctHour: RAW!.USD.CHANGEPCTHOUR,
+          imageUrl: RAW!.USD.IMAGEURL,
+        },
+        display: {
+          fromSymbol: DISPLAY!.USD.FROMSYMBOL,
+          toSymbol: DISPLAY!.USD.TOSYMBOL,
+          price: DISPLAY!.USD.PRICE,
+          openHour: DISPLAY!.USD.OPENHOUR,
+          highHour: DISPLAY!.USD.HIGHHOUR,
+          lowHour: DISPLAY!.USD.LOWHOUR,
+          openDay: DISPLAY!.USD.OPENDAY,
+          highDay: DISPLAY!.USD.HIGHDAY,
+          lowDay: DISPLAY!.USD.LOWDAY,
+          open24Hour: DISPLAY!.USD.OPEN24HOUR,
+          high24Hour: DISPLAY!.USD.HIGH24HOUR,
+          low24Hour: DISPLAY!.USD.LOW24HOUR,
+          change24Hour: DISPLAY!.USD.CHANGE24HOUR,
+          changePct24Hour: DISPLAY!.USD.CHANGE24HOUR,
+          changeDay: DISPLAY!.USD.CHANGEDAY,
+          changePctDay: DISPLAY!.USD.CHANGEPCTDAY,
+          changeHour: DISPLAY!.USD.CHANGEHOUR,
+          changePctHour: DISPLAY!.USD.CHANGEPCTHOUR,
+          imageUrl: DISPLAY!.USD.IMAGEURL,
+        },
+      }));
+
+      console.log(`*** RESPONSE: ${JSON.stringify({ data })}`);
+      setCoins(finalCoins);
+
+    } catch (err: any) {
+      console.error('Error fetching coins:', err.message || err);
       setOnError(true);
+      setErrorString(err.message || 'An error occurred while fetching coins.');
     } finally {
-      setIsLoading(false);
-      console.log(`**** HIDE LOADER ${isLoading}`);
+      setIsLoading(false); // Always stop loading
     }
   };
+
 
   useEffect(() => {
     fetchTopCoins();

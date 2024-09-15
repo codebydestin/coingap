@@ -1,6 +1,7 @@
 
 export interface Coin {
     coinInfo: {
+        coinId: string
         fullName: string,
         shortName: string,
         imageUrl?: string,

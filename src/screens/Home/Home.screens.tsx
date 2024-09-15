@@ -7,6 +7,7 @@ import CoinPicker from '../../components/CoinPicker';
 import ErrorView from '../../components/Error/Error.view';
 import Loader from '../../components/Loader';
 import useTopCoins from '../../hooks/useTopCoins';
+import { Coin } from '../../models/Coin';
 
 const Home = (): JSX.Element => {
   const [fetchTopCoins, coins, onError, isLoading] = useTopCoins();
@@ -28,7 +29,7 @@ const Home = (): JSX.Element => {
               paddingVertical: 36,
             }}>
             {coins.slice(0, 8).map(c => (
-              <CarouselCard key={c.CoinInfo.Id} coin={c} />
+              <CarouselCard key={c.coinInfo.coinId} coin={c} />
             ))}
           </ScrollView>
 

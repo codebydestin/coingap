@@ -1,40 +1,43 @@
 import { faCaretDown, faCaretUp } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { Image, Pressable, Text, View } from 'react-native';
-import React from 'react';
+import React, { FC } from 'react';
 import useCarouselCardStyles from './CarouselCard.styles';
 import { useNavigation } from '@react-navigation/native';
+import { CGCoin } from '../../models/CGCoin';
 
-const CarouselCard = ({ coin }) => {
+interface Props {
+  coin: CGCoin;
+}
+
+const CarouselCard: FC<Props> = ({ coin }) => {
   const styles = useCarouselCardStyles();
   const { navigate } = useNavigation();
+
+  const { coinInfo, raw, display } = coin;
 
   return (
     <Pressable style={styles.wrapper} onPress={() => navigate('CoinDetail')}>
       <Image
         source={{
-          uri: `https://cryptocompare.com/${coin?.CoinInfo?.ImageUrl}`,
+          uri: `https://cryptocompare.com/${coinInfo?.imageUrl}`,
         }}
         style={styles.icon}
       />
-      <Text style={styles.boldText}>{coin.CoinInfo?.FullName}</Text>
-      <Text style={styles.lightText}>{coin.CoinInfo?.Name}</Text>
+      <Text style={styles.boldText}>{coinInfo?.fullName}</Text>
+      <Text style={styles.lightText}>{coinInfo?.shortName}</Text>
       <View>
         <View style={styles.textWrapper}>
-          <Text style={styles.priceText}>{coin.DISPLAY?.USD?.PRICE}</Text>
+          <Text style={styles.priceText}>{display?.price}</Text>
           <Text
-            style={
-              coin.DISPLAY?.USD?.CHANGEPCTDAY < 0
-                ? styles.redColor
-                : styles.greenColor
-            }>
-            {coin.DISPLAY?.USD?.CHANGEPCTDAY}%
+            style={raw.changePctDay < 0 ? styles.redColor : styles.greenColor}>
+            {display?.changePctDay}%
           </Text>
           <FontAwesomeIcon
             size={13}
-            color={coin.DISPLAY?.USD?.CHANGEPCTDAY < 0 ? '#fd595a' : '#29bc81'}
+            color={raw?.changePctDay < 0 ? '#fd595a' : '#29bc81'}
             style={styles.caret}
-            icon={coin.DISPLAY?.USD?.CHANGEPCTDAY < 0 ? faCaretDown : faCaretUp}
+            icon={raw?.changePctDay < 0 ? faCaretDown : faCaretUp}
           />
         </View>
       </View>
