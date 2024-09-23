@@ -135,6 +135,8 @@ export default () => {
     fetchTopCoins,
     coins,
     onError,
+    errorString,
+    status,
     isLoading,
     sortByPrice,
     sortByPctGain,

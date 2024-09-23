@@ -42,7 +42,7 @@ const Home = (): JSX.Element => {
             showsHorizontalScrollIndicator={false}
             horizontal={true}
             style={styles.carouselWrapper}>
-            {coins.map(c => (
+            {coins?.map(c => (
               <CarouselCard key={c.coinInfo.coinId} coin={c} />
             ))}
           </ScrollView>
@@ -60,7 +60,7 @@ const Home = (): JSX.Element => {
               }}
             />
 
-            {coins.map(c => (
+            {coins?.map(c => (
               <CoinCard key={c.CoinInfo?.Id} coin={c} />
             ))}
           </View>
